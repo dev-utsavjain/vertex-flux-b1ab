@@ -1,0 +1,275 @@
+{
+  "project_metadata": {
+    "project_name": "todo-app",
+    "project_category": "Productivity",
+    "description": "A modern, minimalist to-do application that helps users organize and track their daily tasks with an intuitive interface and smooth animations.",
+    "core_purpose": "Streamline task management with a clean, responsive interface that allows users to create, organize, and track their to-do items efficiently.",
+    "target_audience": "Professionals",
+    "key_features": [
+      "Task CRUD operations",
+      "Status filtering",
+      "Responsive design",
+      "Real-time updates",
+      "Smooth animations"
+    ]
+  },
+  "frontend": {
+    "pages": [
+      {
+        "page_name": "Home",
+        "route": "/",
+        "show_in_nav": true,
+        "nav_order": 1,
+        "purpose": "Main task management interface displaying all tasks with filtering and CRUD operations",
+        "sections": [
+          "Hero section with app branding",
+          "Task input form with title and description fields",
+          "Filter buttons (All, Active, Completed)",
+          "Task list with checkbox, title, description, and delete button",
+          "Empty state illustration when no tasks exist"
+        ],
+        "content_notes": "The home page serves as the primary interface for task management. The hero section displays the app name 'TaskFlow' with a subtle gradient background. Below is a clean input form with two fields - title (required, max 100 chars) and description (optional, max 500 chars). The filter buttons are styled as pills with active state highlighting. Each task item displays as a card with a checkbox on the left, task content in the center (title in bold, description in smaller text below), and a delete button on the right. Completed tasks have a strikethrough effect and reduced opacity. The empty state shows a friendly illustration with 'No tasks yet' message and a CTA to add the first task. All interactions include smooth transitions using Framer Motion.",
+        "data_needs": [
+          "/api/tasks"
+        ],
+        "is_protected": false
+      }
+    ],
+    "navigation": {
+      "type": "header",
+      "position": "top",
+      "style": "horizontal",
+      "has_logo": true,
+      "has_search": false,
+      "extra_items": []
+    },
+    "theme": {
+      "design_dna": "GLASSMORPHISM",
+      "color_scheme": "light",
+      "primary_color": "#5E6AD2",
+      "secondary_color": "#F0F2F5",
+      "accent_color": "#10B981",
+      "font_family": "Inter",
+      "font_type": "sans",
+      "border_radius": "lg",
+      "shadow_style": "soft",
+      "animation_style": "moderate",
+      "interaction_style": "subtle"
+    },
+    "components": [
+      {
+        "component_name": "TaskCard",
+        "type": "shared",
+        "used_on": [
+          "Home"
+        ],
+        "purpose": "Displays individual task with checkbox, content, and delete functionality",
+        "props": [
+          "task: {id, title, description, completed}",
+          "onToggle: function",
+          "onDelete: function"
+        ]
+      },
+      {
+        "component_name": "TaskForm",
+        "type": "shared",
+        "used_on": [
+          "Home"
+        ],
+        "purpose": "Input form for creating new tasks with title and description",
+        "props": [
+          "onSubmit: function",
+          "loading: boolean"
+        ]
+      },
+      {
+        "component_name": "FilterPills",
+        "type": "shared",
+        "used_on": [
+          "Home"
+        ],
+        "purpose": "Filter buttons for task status (All, Active, Completed)",
+        "props": [
+          "activeFilter: string",
+          "onFilterChange: function"
+        ]
+      },
+      {
+        "component_name": "EmptyState",
+        "type": "shared",
+        "used_on": [
+          "Home"
+        ],
+        "purpose": "Illustration and message when no tasks exist",
+        "props": []
+      }
+    ],
+    "layout": {
+      "has_header": true,
+      "has_footer": false,
+      "has_sidebar": false,
+      "max_width": "container",
+      "spacing": "normal",
+      "footer_links": []
+    }
+  },
+  "backend": {
+    "requires_backend": true,
+    "apis": [
+      {
+        "endpoint": "/api/tasks",
+        "method": "GET",
+        "purpose": "Retrieve all tasks ordered by creation date (newest first)",
+        "request_body": {},
+        "response": {
+          "count": "integer",
+          "tasks": "array of task objects"
+        },
+        "auth": false,
+        "used_by": [
+          "Home"
+        ]
+      },
+      {
+        "endpoint": "/api/tasks",
+        "method": "POST",
+        "purpose": "Create a new task with title and description",
+        "request_body": {
+          "description": "string (optional, max 500)",
+          "title": "string (required, max 100)"
+        },
+        "response": {
+          "completed": "boolean",
+          "created_at": "timestamp",
+          "description": "string",
+          "id": "integer",
+          "title": "string",
+          "updated_at": "timestamp"
+        },
+        "auth": false,
+        "used_by": [
+          "Home"
+        ]
+      },
+      {
+        "endpoint": "/api/tasks/:id",
+        "method": "PUT",
+        "purpose": "Update task title and/or description",
+        "request_body": {
+          "description": "string (optional)",
+          "title": "string (optional)"
+        },
+        "response": {
+          "completed": "boolean",
+          "created_at": "timestamp",
+          "description": "string",
+          "id": "integer",
+          "title": "string",
+          "updated_at": "timestamp"
+        },
+        "auth": false,
+        "used_by": [
+          "Home"
+        ]
+      },
+      {
+        "endpoint": "/api/tasks/:id",
+        "method": "DELETE",
+        "purpose": "Delete a specific task by ID",
+        "request_body": {},
+        "response": {
+          "message": "string",
+          "success": "boolean"
+        },
+        "auth": false,
+        "used_by": [
+          "Home"
+        ]
+      },
+      {
+        "endpoint": "/api/tasks/:id/toggle",
+        "method": "PATCH",
+        "purpose": "Toggle the completion status of a task",
+        "request_body": {},
+        "response": {
+          "completed": "boolean",
+          "created_at": "timestamp",
+          "description": "string",
+          "id": "integer",
+          "title": "string",
+          "updated_at": "timestamp"
+        },
+        "auth": false,
+        "used_by": [
+          "Home"
+        ]
+      }
+    ],
+    "database": {
+      "models": [
+        {
+          "model_name": "Task",
+          "fields": {
+            "completed": "boolean DEFAULT false",
+            "created_at": "timestamp DEFAULT CURRENT_TIMESTAMP",
+            "description": "varchar(500)",
+            "id": "integer PRIMARY KEY AUTOINCREMENT",
+            "title": "varchar(100) NOT NULL",
+            "updated_at": "timestamp DEFAULT CURRENT_TIMESTAMP"
+          },
+          "relationships": [],
+          "indexes": [
+            "created_at",
+            "completed"
+          ]
+        }
+      ]
+    },
+    "authentication": {
+      "required": false,
+      "type": "none",
+      "providers": [],
+      "protected_apis": []
+    },
+    "external_apis": [],
+    "file_storage": {
+      "required": false,
+      "types": [],
+      "max_size": ""
+    }
+  },
+  "technical_specs": {
+    "frontend": {
+      "framework": "React",
+      "routing": "react-router-dom",
+      "styling": "Tailwind CSS v4",
+      "state_management": "React Context",
+      "animation": "Framer Motion",
+      "dependencies": [
+        "react@^19.0.0",
+        "react-dom@^19.0.0",
+        "react-router-dom@^7.0.0",
+        "@tailwindcss/postcss@^4.0.0",
+        "tailwindcss@^4.0.0",
+        "@tailwindcss/vite",
+        "framer-motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge",
+        "vite@^6.1.0",
+        "postcss@^8.5.1",
+        "tailwindcss@^4.0.0"
+      ]
+    },
+    "backend": {
+      "framework": "Standard Library",
+      "database": "PostgreSQL",
+      "orm": "none",
+      "auth": "None",
+      "dependencies": [
+        "github.com/lib/pq",
+        "github.com/gorilla/mux"
+      ]
+    }
+  }
+}

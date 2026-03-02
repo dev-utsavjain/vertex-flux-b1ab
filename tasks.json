@@ -1,0 +1,155 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-03-02T04:27:57.07839265Z",
+  "total_tasks": 12,
+  "completed_tasks": 2,
+  "failed_tasks": 0,
+  "status": "in_progress",
+  "tasks": [
+    {
+      "id": "task_001",
+      "category": "database",
+      "type": "model",
+      "title": "Task Model Schema",
+      "description": "PostgreSQL schema for the Task table with fields: id (SERIAL PRIMARY KEY), title (VARCHAR(100) NOT NULL), description (VARCHAR(500)), completed (BOOLEAN DEFAULT false), created_at (TIMESTAMP DEFAULT CURRENT_TIMESTAMP), updated_at (TIMESTAMP DEFAULT CURRENT_TIMESTAMP). Include indexes on created_at and completed columns.",
+      "status": "pending",
+      "dependencies": [],
+      "file_path": "backend/models/task.go"
+    },
+    {
+      "id": "task_002",
+      "category": "backend",
+      "type": "api",
+      "title": "GET /api/tasks Endpoint",
+      "description": "Handler to retrieve all tasks ordered by creation date (newest first). Returns JSON with count and tasks array. No authentication required. Query the Task model and respond with proper JSON structure.",
+      "status": "pending",
+      "dependencies": [
+        "task_001"
+      ],
+      "file_path": "backend/routes/get_tasks.go"
+    },
+    {
+      "id": "task_003",
+      "category": "backend",
+      "type": "api",
+      "title": "POST /api/tasks Endpoint",
+      "description": "Handler to create a new task. Accepts JSON body with title (required, max 100) and description (optional, max 500). Validates input, inserts into Task table, returns the created task JSON including id, created_at, updated_at, completed=false.",
+      "status": "pending",
+      "dependencies": [
+        "task_001"
+      ],
+      "file_path": "backend/routes/create_task.go"
+    },
+    {
+      "id": "task_004",
+      "category": "backend",
+      "type": "api",
+      "title": "PUT /api/tasks/:id Endpoint",
+      "description": "Handler to update task title and/or description by ID. Accepts optional title and/or description in JSON body. Validates input, updates Task row, returns updated task JSON. Returns 404 if task not found.",
+      "status": "pending",
+      "dependencies": [
+        "task_001"
+      ],
+      "file_path": "backend/routes/update_task.go"
+    },
+    {
+      "id": "task_005",
+      "category": "backend",
+      "type": "api",
+      "title": "DELETE /api/tasks/:id Endpoint",
+      "description": "Handler to delete a task by ID. Returns JSON success=true and message='Task deleted' on success. Returns 404 if task not found.",
+      "status": "pending",
+      "dependencies": [
+        "task_001"
+      ],
+      "file_path": "backend/routes/delete_task.go"
+    },
+    {
+      "id": "task_006",
+      "category": "backend",
+      "type": "api",
+      "title": "PATCH /api/tasks/:id/toggle Endpoint",
+      "description": "Handler to toggle the completion status of a task by ID. Updates completed boolean to NOT completed, returns updated task JSON including new completed value and updated_at timestamp.",
+      "status": "pending",
+      "dependencies": [
+        "task_001"
+      ],
+      "file_path": "backend/routes/toggle_task.go"
+    },
+    {
+      "id": "task_007",
+      "category": "frontend",
+      "type": "component",
+      "title": "TaskCard Component",
+      "description": "Reusable card displaying a single task with checkbox (left), task content (center: bold title, smaller description), and delete button (right). Completed tasks show strikethrough and reduced opacity. Props: task={id,title,description,completed}, onToggle(), onDelete(). Styled with Tailwind glassmorphism, soft shadows, large border radius.",
+      "status": "pending",
+      "dependencies": [],
+      "file_path": "frontend/src/components/TaskCard.jsx"
+    },
+    {
+      "id": "task_008",
+      "category": "frontend",
+      "type": "component",
+      "title": "TaskForm Component",
+      "description": "Form with two inputs: title (required, max 100 chars) and description (optional, max 500 chars), plus submit button. Validates title presence. Props: onSubmit(formData), loading. Styled with Tailwind glassmorphism, Inter font, primary color #5E6AD2.",
+      "status": "pending",
+      "dependencies": [],
+      "file_path": "frontend/src/components/TaskForm.jsx"
+    },
+    {
+      "id": "task_009",
+      "category": "frontend",
+      "type": "component",
+      "title": "FilterPills Component",
+      "description": "Three pill buttons: All, Active, Completed. Active pill highlighted with primary color. Props: activeFilter ('all'|'active'|'completed'), onFilterChange(filter). Smooth transitions, glassmorphism style, soft shadows.",
+      "status": "pending",
+      "dependencies": [],
+      "file_path": "frontend/src/components/FilterPills.jsx"
+    },
+    {
+      "id": "task_010",
+      "category": "frontend",
+      "type": "component",
+      "title": "EmptyState Component",
+      "description": "Illustration and message 'No tasks yet' with CTA to add first task. Uses lucide-react icon, friendly copy, gentle animation with Framer Motion. No props.",
+      "status": "pending",
+      "dependencies": [],
+      "file_path": "frontend/src/components/EmptyState.jsx"
+    },
+    {
+      "id": "task_011",
+      "category": "frontend",
+      "type": "page",
+      "title": "Home Page",
+      "description": "Main task management interface at route '/'. Contains: Hero section with 'TaskFlow' branding and gradient background, TaskForm, FilterPills, TaskCard list (or EmptyState), all within a responsive container. Uses React Context for state, fetches tasks from GET /api/tasks, creates via POST /api/tasks, toggles via PATCH /api/tasks/:id/toggle, deletes via DELETE /api/tasks/:id. Implements filter logic (All/Active/Completed). Smooth animations with Framer Motion.",
+      "status": "completed",
+      "dependencies": [
+        "task_007",
+        "task_008",
+        "task_009",
+        "task_010",
+        "task_002",
+        "task_003",
+        "task_005",
+        "task_006"
+      ],
+      "file_path": "frontend/src/pages/Home.jsx",
+      "started_at": "2026-03-02T04:27:59.560518413Z",
+      "completed_at": "2026-03-02T04:28:27.965883275Z"
+    },
+    {
+      "id": "task_012",
+      "category": "frontend",
+      "type": "page",
+      "title": "App.jsx",
+      "description": "Root React component with React Router. Defines routes: '/' -\u003e Home page. Wraps app in Tailwind CSS and Inter font. Provides React Context for task state. FULL SYSTEM CONTEXT: Frontend pages: Home(/). Components: TaskCard, TaskForm, FilterPills, EmptyState. Backend APIs: GET /api/tasks, POST /api/tasks, PUT /api/tasks/:id, DELETE /api/tasks/:id, PATCH /api/tasks/:id/toggle. Database model: Task(id SERIAL, title VARCHAR(100), description VARCHAR(500), completed BOOLEAN, created_at TIMESTAMP, updated_at TIMESTAMP).",
+      "status": "completed",
+      "dependencies": [
+        "task_011"
+      ],
+      "file_path": "frontend/src/App.jsx",
+      "started_at": "2026-03-02T04:28:28.526686819Z",
+      "completed_at": "2026-03-02T04:28:32.779417103Z"
+    }
+  ]
+}
